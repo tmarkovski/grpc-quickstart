@@ -1,21 +1,19 @@
-﻿FROM mcr.microsoft.com/dotnet/runtime:9.0 AS base
-USER $APP_UID
-WORKDIR /app
-
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
-ARG BUILD_CONFIGURATION=Release
+﻿FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
+
+# Copy the project files and restore any dependencies
 COPY ["Client/Client.csproj", "Client/"]
 RUN dotnet restore "Client/Client.csproj"
-COPY . .
-WORKDIR "/src/Client"
-RUN dotnet build "Client.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "Client.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+# Copy the rest of the application files and build the application
+COPY ["Client/", "Client/"]
+COPY ["./Protos", "./Protos"]
+RUN dotnet publish "Client/Client.csproj" -c Release -o /app/publish
 
-FROM base AS final
+# Use the official ASP.NET Core runtime image to run the application
+FROM mcr.microsoft.com/dotnet/aspnet:9.0-noble-chiseled
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app/publish .
+
+# Run the application
 ENTRYPOINT ["dotnet", "Client.dll"]
