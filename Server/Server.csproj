@@ -16,4 +16,8 @@
     <PackageReference Include="Grpc.AspNetCore.Web" Version="2.67.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Properties\launchSettings.json" />
+  </ItemGroup>
+
 </Project>

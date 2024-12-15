@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Server/Dockerfile
+    environment:
+      - PORT=80
+      - PROTOCOL=http2
+    ports:
+      - "80:80"
+
+  proxy:
+    build:
+      context: .
+      dockerfile: Proxy/Dockerfile
+    environment:
+      - PORT=8080
+      - PROTOCOL=http1
+      - TARGET=http://server:80
+    ports:
+      - "8080:8080"
