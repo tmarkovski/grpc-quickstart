@@ -15,3 +15,5 @@ obj/
 .vs/
 *.vscode/
 *.tfignore
+
+.idea/

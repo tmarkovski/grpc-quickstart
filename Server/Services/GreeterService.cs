@@ -1,7 +1,7 @@
 using Grpc.Core;
-using grpc_quickstart;
+using GrpcQuickstart;
 
-namespace grpc_quickstart.Services;
+namespace Server.Services;
 
 public class GreeterService : Greeter.GreeterBase
 {
